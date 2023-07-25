@@ -16,11 +16,10 @@ void appSetup(void)
 
   Serial.begin(APP_MONITOR_SPEED);
   ledsSetup();
+  buttonsSetup();
 }
 
 void appInit(void)
 {
-  ledsResumeTasks();  
+  Serial.printf("----- START APPLICATION -----\n");
 }
-
-

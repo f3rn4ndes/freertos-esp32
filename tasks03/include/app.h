@@ -10,12 +10,12 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "leds.h"
-
+#include "buttons.h"
 
 /* Defines */
-#define APP_LOOP_DELAY_MS     2000
-#define APP_INITIAL_DELAY_MS  2000
-#define APP_MONITOR_SPEED     115200
+#define APP_LOOP_DELAY_MS 2000
+#define APP_INITIAL_DELAY_MS 2000
+#define APP_MONITOR_SPEED 115200
 
 /* Data Types - typedefs, structs, unions and/or enumerated */
 
@@ -25,7 +25,6 @@ void appInit(void);
 
 /* Local Functions */
 #ifdef _APP_
-
 
 #endif
 

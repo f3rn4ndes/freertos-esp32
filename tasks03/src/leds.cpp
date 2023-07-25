@@ -13,162 +13,116 @@
 
 void ledsSetup(void)
 {
-	pinMode(LED1_PIN, OUTPUT);
-	pinMode(LED2_PIN, OUTPUT);
-	pinMode(LED3_PIN, OUTPUT);
-	pinMode(LED4_PIN, OUTPUT);
-	digitalWrite(LED1_PIN, LOW);
-	digitalWrite(LED2_PIN, LOW);
-	digitalWrite(LED3_PIN, LOW);
-	digitalWrite(LED4_PIN, LOW);
+
+	pinMode(LED1, OUTPUT);
+	pinMode(LED2, OUTPUT);
+	digitalWrite(LED1, LOW);
+	digitalWrite(LED2, LOW);
 
 	ledsInit();
-
 }
 
 void ledsInit(void)
 {
+
+	led1.pin = LED1;
+	led1.mode = lmClear;
+	led1.change = false;
+
+	led2.pin = LED2;
+	led2.mode = lmClear;
+	led2.change = false;
+
 	leds1TaskCreate();
 	leds2TaskCreate();
-	leds3TaskCreate();
-	leds4TaskCreate();
-}
-
-
-void ledsResumeTasks(void)
-{
-	vTaskResume(leds1TaskHandle);
-	vTaskResume(leds2TaskHandle);
-	vTaskResume(leds3TaskHandle);
 }
 
 void leds1TaskCreate(void)
 {
 	BaseType_t rc;
 	rc = xTaskCreatePinnedToCore(
-		leds1Task,			      // task function
-		"LEDS1",				  // task name
-		LEDS1_TASK_STACK_SIZE, // stack size, memory size to run this task (see systemtasks.h)
-		NULL,					  // task parameters (not used) (see systemtasks.h)
-		LEDS1_TASK_PRIORITY,	  // task priority (see systemtasks.h)
+		leds1Task,			  // task function
+		"LEDS1",			  // task name
+		LED1_TASK_STACK_SIZE, // stack size, memory size to run this task (see systemtasks.h)
+		NULL,				  // task parameters (not used) (see systemtasks.h)
+		LED1_TASK_PRIORITY,	  // task priority (see systemtasks.h)
 		&leds1TaskHandle,	  // task handle
-		LEDS1_TASK_CORE		  // core processor where the task will be run (see systemtasks.h)
+		LED1_TASK_CORE		  // core processor where the task will be run (see systemtasks.h)
 	);
 	assert(rc == pdPASS);
-	vTaskSuspend(leds1TaskHandle);
 }
 
 void leds2TaskCreate(void)
 {
 	BaseType_t rc;
 	rc = xTaskCreatePinnedToCore(
-		leds2Task,			      // task function
-		"LEDS2",				  // task name
-		LEDS2_TASK_STACK_SIZE, // stack size, memory size to run this task (see systemtasks.h)
-		NULL,					  // task parameters (not used) (see systemtasks.h)
-		LEDS2_TASK_PRIORITY,	  // task priority (see systemtasks.h)
+		leds2Task,			  // task function
+		"LEDS2",			  // task name
+		LED2_TASK_STACK_SIZE, // stack size, memory size to run this task (see systemtasks.h)
+		NULL,				  // task parameters (not used) (see systemtasks.h)
+		LED2_TASK_PRIORITY,	  // task priority (see systemtasks.h)
 		&leds2TaskHandle,	  // task handle
-		LEDS1_TASK_CORE		  // core processor where the task will be run (see systemtasks.h)
+		LED2_TASK_CORE		  // core processor where the task will be run (see systemtasks.h)
 	);
 	assert(rc == pdPASS);
-	vTaskSuspend(leds2TaskHandle);
-}
-
-void leds3TaskCreate(void)
-{
-	BaseType_t rc;
-	rc = xTaskCreatePinnedToCore(
-		leds3Task,			      // task function
-		"LEDS3",				  // task name
-		LEDS3_TASK_STACK_SIZE, // stack size, memory size to run this task (see systemtasks.h)
-		NULL,					  // task parameters (not used) (see systemtasks.h)
-		LEDS3_TASK_PRIORITY,	  // task priority (see systemtasks.h)
-		&leds3TaskHandle,	  // task handle
-		LEDS3_TASK_CORE		  // core processor where the task will be run (see systemtasks.h)
-	);
-	assert(rc == pdPASS);
-	vTaskSuspend(leds3TaskHandle);
-}
-
-void leds4TaskCreate(void)
-{
-	BaseType_t rc;
-	rc = xTaskCreatePinnedToCore(
-		leds4Task,			      // task function
-		"LEDS4",				  // task name
-		LEDS4_TASK_STACK_SIZE, // stack size, memory size to run this task (see systemtasks.h)
-		NULL,					  // task parameters (not used) (see systemtasks.h)
-		LEDS4_TASK_PRIORITY,	  // task priority (see systemtasks.h)
-		&leds4TaskHandle,	  // task handle
-		LEDS4_TASK_CORE		  // core processor where the task will be run (see systemtasks.h)
-	);
-	assert(rc == pdPASS);
-	vTaskSuspend(leds4TaskHandle);
 }
 
 static void leds1Task(void *pvParameters)
 {
+	static const xLedMode *ptr = LED_MODES[led1.mode];
 	for (;;)
 	{
-		// blink led 1
-		digitalWrite(LED1_PIN,digitalRead(LED1_PIN)^1);
-		vTaskDelay(pdMS_TO_TICKS(LEDS1_TASK_DELAY_MS));
+		if (led1.change)
+		{
+			led1.change = false;
+			++led1.mode %= (lmCustom + 1);
+			ptr = LED_MODES[led1.mode];
+			Serial.printf("Led 1 Mode: %d\n", led1.mode);
+		}
+
+		digitalWrite(LED1, ptr->state);
+		vTaskDelay(pdMS_TO_TICKS(ptr->delay));
+
+		ptr++;
+
+		if (ptr->delay == 0)
+		{
+			ptr = LED_MODES[led1.mode];
+		}
 	}
-	vTaskDelete(NULL);
 }
 
 static void leds2Task(void *pvParameters)
 {
-	static int taskCounter = 0;
-
+	static const xLedMode *ptr = LED_MODES[led1.mode];
 	for (;;)
 	{
-		++taskCounter;
-
-		// blink led 2
-		digitalWrite(LED2_PIN,digitalRead(LED2_PIN)^1);
-
-		if (taskCounter % 5 == 0) // 5 10 15 ...
+		if (led2.change)
 		{
-			xTaskNotifyGive(leds3TaskHandle);
+			led2.change = false;
+			++led2.mode %= (lmCustom + 1);
+			ptr = LED_MODES[led2.mode];
+			Serial.printf("Led 2 Mode: %d\n", led2.mode);
 		}
 
-		if (taskCounter % 7 == 0) // 7 14 21 ...
+		digitalWrite(LED2, ptr->state);
+		vTaskDelay(pdMS_TO_TICKS(ptr->delay));
+
+		ptr++;
+
+		if (ptr->delay == 0)
 		{
-			if (eTaskGetState(leds4TaskHandle) == eSuspended)
-			{
-				vTaskResume(leds4TaskHandle);
-			}
+			ptr = LED_MODES[led2.mode];
 		}
-
-		vTaskDelay(pdMS_TO_TICKS(LEDS2_TASK_DELAY_MS));
 	}
-	vTaskDelete(NULL);
 }
 
-// Task 3 : Wait Notification
-static void leds3Task(void *pvParameters)
+void led1Change(void)
 {
-	uint32_t rv;
-	for (;;)
-	{
-		rv = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-		// blink led 3
-		digitalWrite(LED3_PIN,digitalRead(LED3_PIN)^1);
-		// vTaskDelay(pdMS_TO_TICKS(LEDS3_TASK_DELAY_MS));
-	}
-	vTaskDelete(NULL);
+	led1.change = true;
 }
 
-// Task 4 : Executes and Suspend
-static void leds4Task(void *pvParameters)
+void led2Change(void)
 {
-	for (;;)
-	{
-		// blink led 4
-		digitalWrite(LED4_PIN,digitalRead(LED4_PIN)^1);
-		vTaskSuspend(leds4TaskHandle);
-	}
-	vTaskDelete(NULL);
+	led2.change = true;
 }
-
