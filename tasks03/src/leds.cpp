@@ -75,7 +75,7 @@ static void leds1Task(void *pvParameters)
 		if (led1.change)
 		{
 			led1.change = false;
-			++led1.mode %= (lmCustom + 1);
+			++led1.mode %= (lmCustom + 1); // 0..1....6..(in 7 back to 0)
 			ptr = LED_MODES[led1.mode];
 			Serial.printf("Led 1 Mode: %d\n", led1.mode);
 		}

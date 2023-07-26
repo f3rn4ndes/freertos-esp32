@@ -61,12 +61,14 @@ static void button1Task(void *pvParameters)
     static int free = true;
     for (;;)
     {
+        // check pressed
         if (!digitalRead(BUTTON1) && free)
         {
             free = false;
             led1Change();
         }
 
+        // check released
         if (digitalRead(BUTTON1) && !free)
         {
             free = true;
@@ -80,12 +82,14 @@ static void button2Task(void *pvParameters)
     static int free = true;
     for (;;)
     {
+        // check pressed
         if (!digitalRead(BUTTON2) && free)
         {
             free = false;
             led2Change();
         }
 
+        // check released
         if (digitalRead(BUTTON2) && !free)
         {
             free = true;

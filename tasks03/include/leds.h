@@ -26,6 +26,7 @@ typedef enum
 	lmSlowBlink,
 	lmBlink,
 	lmFastBlink,
+	lmPulse,
 	lmCustom
 } enLedMode;
 
@@ -39,13 +40,13 @@ typedef struct
 typedef struct
 {
 	unsigned char pin;
-	unsigned char mode;
+	unsigned char mode; // led mode
 	unsigned char change;
 } xLed;
 
 const xLedMode LED_MODES[][LEDMODE_MAX_ITENS] = {
 	{
-		{0, 100} // off
+		{0, 100} // off,
 	},
 	{
 		{1, 100} // on
@@ -62,7 +63,12 @@ const xLedMode LED_MODES[][LEDMODE_MAX_ITENS] = {
 	},
 
 	{
-		{0, 2000}, // fast blink, aka pulse
+		{0, 250}, // fast blink
+		{1, 250},
+	},
+
+	{
+		{0, 1000}, // pulse
 		{1, 250},
 	},
 
