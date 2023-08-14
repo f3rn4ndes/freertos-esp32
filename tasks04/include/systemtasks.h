@@ -1,0 +1,42 @@
+/*
+  Copyright (c), 2023
+  All rights reserved.
+*/
+
+#pragma once
+
+// Defines
+
+#define APP_TASK_LOOP false
+#define APP_TASK_NOTIFY true
+
+// Task Stack Size
+#define APP_DEFAULT_STACK_SIZE 3000
+#define APP_TASK_STACK_SIZE APP_DEFAULT_STACK_SIZE
+
+#define LED1_TASK_STACK_SIZE APP_DEFAULT_STACK_SIZE
+#define LED2_TASK_STACK_SIZE APP_DEFAULT_STACK_SIZE
+#define BUTTON1_TASK_STACK_SIZE APP_DEFAULT_STACK_SIZE
+#define BUTTON2_TASK_STACK_SIZE APP_DEFAULT_STACK_SIZE
+
+// Task Priority
+#define APP_TASK_PRIORITY 1
+
+#define LED1_TASK_PRIORITY 3
+#define LED2_TASK_PRIORITY 3
+#define BUTTON1_TASK_PRIORITY 4
+#define BUTTON2_TASK_PRIORITY 5
+
+// Tasks Core
+#define APP_TASK_CORE 0
+
+#define LED1_TASK_CORE 0
+#define LED2_TASK_CORE 0
+#define BUTTON1_TASK_CORE 0
+#define BUTTON2_TASK_CORE 0
+
+// Tasks Delay
+#define APP_TASK_DELAY_MS 1000
+
+#define BUTTON1_TASK_DELAY_MS 25
+#define BUTTON2_TASK_DELAY_MS 25
