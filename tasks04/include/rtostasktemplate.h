@@ -24,6 +24,8 @@ private:
 
     uint16_t taskDelay;
 
+    String taskName;
+
     // Static function that acts as the task entry point
     static void taskEntryPoint(void *objPtr)
     {
@@ -35,20 +37,23 @@ public:
     // Default Constructor
     RTOSTaskTemplate() {}
 
-    void create(const char *taskName, uint16_t stackSize, UBaseType_t priority, UBaseType_t core, boolean notification, uint16_t delay)
+    void create(const char *_taskName, uint16_t _stackSize,
+                UBaseType_t _priority, UBaseType_t _core,
+                boolean _waitForNotification, uint16_t _taskDelay)
     {
-        this->waitForNotification = notification;
-        this->taskDelay = delay;
+        this->waitForNotification = _waitForNotification;
+        this->taskDelay = _taskDelay;
+        this->taskName = String(_taskName);
 
         BaseType_t rc;
         rc = xTaskCreatePinnedToCore(
             taskEntryPoint,
-            taskName,
-            stackSize,
+            _taskName,
+            _stackSize,
             this,
-            priority,
+            _priority,
             &taskHandle,
-            core);
+            _core);
         assert(rc == pdPASS);
     }
 
@@ -74,6 +79,11 @@ public:
     uint16_t getTaskDelay() const
     {
         return taskDelay;
+    }
+
+    String getTaskName() const
+    {
+        return taskName;
     }
 
     // Ensure the task is deleted when object is destroyed

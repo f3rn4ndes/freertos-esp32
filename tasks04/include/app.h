@@ -22,8 +22,29 @@
 class AppTask : public RTOSTaskTemplate
 {
 protected:
-    void setup() override;
-    void execute() override;
+    void setup() override
+    {
+    }
+
+    void execute() override
+    {
+        uint32_t rv;
+
+        for (;;)
+        {
+            if (this->getNotification())
+            {
+                rv = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+            }
+
+            Serial.println((String) "Task: " + this->getTaskName() + " - Task Delay: " + this->getTaskDelay());
+
+            if (!this->getNotification())
+            {
+                vTaskDelay(pdMS_TO_TICKS(this->getTaskDelay()));
+            }
+        }
+    }
 };
 
 // Public Functions
@@ -41,5 +62,7 @@ void appInit(void);
 #ifdef _APP_
 
 AppTask appExample;
+AppTask appExample2;
+AppTask appExample3;
 
 #endif

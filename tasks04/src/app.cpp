@@ -22,35 +22,28 @@ void appSetup(void)
 void appInit(void)
 {
     Serial.printf("----- START APPLICATION -----\n");
+
     appExample.create(
-        "Teste",
+        "Teste 1",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
         APP_TASK_CORE,
         APP_TASK_LOOP,
         APP_TASK_DELAY_MS);
-}
 
-void AppTask::setup()
-{
-}
+    appExample2.create(
+        "Teste 2",
+        APP_TASK_STACK_SIZE,
+        APP_TASK_PRIORITY,
+        APP_TASK_CORE,
+        APP_TASK_LOOP,
+        APP_TASK_DELAY_MS * 2);
 
-void AppTask::execute()
-{
-    uint32_t rv;
-
-    for (;;)
-    {
-        if (appExample.getNotification())
-        {
-            rv = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-        }
-
-        Serial.println((String) "AppExample: " + __func__);
-
-        if (!appExample.getNotification())
-        {
-            vTaskDelay(pdMS_TO_TICKS(appExample.getTaskDelay()));
-        }
-    }
+    appExample3.create(
+        "Teste 3",
+        APP_TASK_STACK_SIZE,
+        APP_TASK_PRIORITY,
+        APP_TASK_CORE,
+        APP_TASK_LOOP,
+        APP_TASK_DELAY_MS * 5);
 }
