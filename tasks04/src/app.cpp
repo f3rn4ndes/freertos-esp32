@@ -36,7 +36,7 @@ void appInit(void)
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
         APP_TASK_CORE,
-        APP_TASK_LOOP,
+        APP_TASK_NOTIFY,
         APP_TASK_DELAY_MS * 2);
 
     appExample3.create(
@@ -46,4 +46,12 @@ void appInit(void)
         APP_TASK_CORE,
         APP_TASK_LOOP,
         APP_TASK_DELAY_MS * 5);
+
+    appExample4.create(
+        "Teste 4",
+        APP_TASK_STACK_SIZE,
+        APP_TASK_PRIORITY,
+        APP_TASK_CORE,
+        APP_TASK_LOOP,
+        APP_TASK_DELAY_MS * 3);
 }

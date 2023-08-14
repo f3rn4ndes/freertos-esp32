@@ -41,9 +41,9 @@ public:
                 UBaseType_t _priority, UBaseType_t _core,
                 boolean _waitForNotification, uint16_t _taskDelay)
     {
+        this->taskName = String(_taskName);
         this->waitForNotification = _waitForNotification;
         this->taskDelay = _taskDelay;
-        this->taskName = String(_taskName);
 
         BaseType_t rc;
         rc = xTaskCreatePinnedToCore(

@@ -24,6 +24,9 @@ void buttonsInit(void)
 {
     button1TaskCreate();
     button2TaskCreate();
+
+    myButtonMozovos.create("meu botao", 4000, 4, 1, false, 500);
+    
 }
 
 void button1TaskCreate(void)

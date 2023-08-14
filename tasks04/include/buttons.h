@@ -11,12 +11,42 @@
 #include "systemtasks.h"
 #include "board.h"
 #include "leds.h"
+#include "rtostasktemplate.h"
 
 /* Defines */
 #define BUTTON1 BOARD_BUTTON1_PIN
 #define BUTTON2 BOARD_BUTTON2_PIN
 
 /* Data Types - typedefs, structs, unions and/or enumerated */
+
+// Classes
+class ButtonTask : public RTOSTaskTemplate
+{
+protected:
+    void setup() override
+    {
+    }
+
+    void execute() override
+    {
+        uint32_t rv;
+
+        for (;;)
+        {
+            if (this->getNotification())
+            {
+                rv = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+            }
+
+            Serial.println((String) "Botão: " + this->getTaskName() + " - Task Delay: " + this->getTaskDelay());
+
+            if (!this->getNotification())
+            {
+                vTaskDelay(pdMS_TO_TICKS(this->getTaskDelay()));
+            }
+        }
+    }
+};
 
 /* Public Functions */
 void buttonsSetup(void);
@@ -41,5 +71,7 @@ static void button2Task(void *pvParameters);
 
 static TaskHandle_t button1TaskHandle = NULL;
 static TaskHandle_t button2TaskHandle = NULL;
+
+ButtonTask myButtonMozovos;
 
 #endif
