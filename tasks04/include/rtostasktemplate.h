@@ -36,11 +36,6 @@ public:
         assert(rc == pdPASS);
     }
 
-    void notify()
-    {
-        xTaskNotifyGive(mTaskHandle);
-    }
-
     void deleteTask()
     {
         if (mTaskHandle)
@@ -49,6 +44,11 @@ public:
             mTaskHandle = nullptr;
         }
     }
+
+    void notify()
+    {
+        xTaskNotifyGive(mTaskHandle);
+    };
 
     TaskHandle_t getTaskHandle() const
     {

@@ -18,9 +18,9 @@ void appSetup(void)
     Serial.printf("----- START APPLICATION -----\n");
 
     ledSetup();
-    buttonSetup();
-
     ledInit();
+
+    buttonSetup();
     buttonInit();
 
     appExample.create(

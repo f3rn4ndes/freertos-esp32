@@ -100,6 +100,11 @@ public:
         mModePtr = LED_MODES[mMode];
     }
 
+    void setChange()
+    {
+        mChange = true;
+    }
+
 private:
     uint8_t mPin = 0;
     uint8_t mMode = lmClear;
@@ -135,7 +140,7 @@ protected:
 // Public functions
 void ledSetup(void);
 void ledInit(void);
-TaskHandle_t ledGetTaskHandle(uint8_t pTaskHandle);
+void ledChange(uint8_t pLed);
 
 // Local Variables
 #ifdef _LED_

@@ -13,27 +13,26 @@
 
 void buttonSetup(void)
 {
-    uint8_t _button;
+    Button_t _button;
 
-    _button = BUTTON_F1;
+    _button.pin = BUTTON_F1;
+    _button.led = LED_F1;
     buttonF1.setup(_button);
 
-    _button = BUTTON_F1;
+    _button.pin = BUTTON_F2;
+    _button.led = LED_F2;
     buttonF2.setup(_button);
 }
 
 void buttonInit(void)
 {
 
-    buttonF1.createNotifier(ledGetTaskHandle(LED_F1));
-    buttonF2.createNotifier(ledGetTaskHandle(LED_F2));
-
     buttonF1.create(
         "BUTTON F1",
         BUTTON_F1_TASK_STACK_SIZE,
         BUTTON_F1_TASK_PRIORITY,
         BUTTON_F1_TASK_CORE,
-        SYSTEM_TASK_NOTIFY,
+        SYSTEM_TASK_LOOP,
         BUTTON_F1_TASK_DELAY_MS);
 
     buttonF2.create(
@@ -41,7 +40,6 @@ void buttonInit(void)
         BUTTON_F2_TASK_STACK_SIZE,
         BUTTON_F2_TASK_PRIORITY,
         BUTTON_F2_TASK_CORE,
-        SYSTEM_TASK_NOTIFY,
+        SYSTEM_TASK_LOOP,
         BUTTON_F2_TASK_DELAY_MS);
 }
-
