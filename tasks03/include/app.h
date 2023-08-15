@@ -9,8 +9,8 @@
 #include <Arduino.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "leds.h"
-#include "buttons.h"
+#include "led.h"
+#include "button.h"
 
 /* Defines */
 #define APP_LOOP_DELAY_MS 2000

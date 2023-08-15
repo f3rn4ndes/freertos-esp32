@@ -15,20 +15,20 @@ void appSetup(void)
 {
 
     Serial.begin(APP_MONITOR_SPEED);
-    ledsSetup();
-    buttonsSetup();
-}
-
-void appInit(void)
-{
     Serial.printf("----- START APPLICATION -----\n");
+
+    ledSetup();
+    buttonSetup();
+
+    ledInit();
+    buttonInit();
 
     appExample.create(
         "Teste 1",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
         APP_TASK_CORE,
-        APP_TASK_LOOP,
+        SYSTEM_TASK_LOOP,
         APP_TASK_DELAY_MS);
 
     appExample2.create(
@@ -36,22 +36,6 @@ void appInit(void)
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
         APP_TASK_CORE,
-        APP_TASK_NOTIFY,
+        SYSTEM_TASK_LOOP,
         APP_TASK_DELAY_MS * 2);
-
-    appExample3.create(
-        "Teste 3",
-        APP_TASK_STACK_SIZE,
-        APP_TASK_PRIORITY,
-        APP_TASK_CORE,
-        APP_TASK_LOOP,
-        APP_TASK_DELAY_MS * 5);
-
-    appExample4.create(
-        "Teste 4",
-        APP_TASK_STACK_SIZE,
-        APP_TASK_PRIORITY,
-        APP_TASK_CORE,
-        APP_TASK_LOOP,
-        APP_TASK_DELAY_MS * 3);
 }

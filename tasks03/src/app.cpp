@@ -14,12 +14,14 @@
 void appSetup(void)
 {
 
-  Serial.begin(APP_MONITOR_SPEED);
-  ledsSetup();
-  buttonsSetup();
+    Serial.begin(APP_MONITOR_SPEED);
+    ledSetup();
+    buttonSetup();
 }
 
 void appInit(void)
 {
-  Serial.printf("----- START APPLICATION -----\n");
+    Serial.printf("----- START APPLICATION -----\n");
+    ledInit();
+    buttonInit();
 }

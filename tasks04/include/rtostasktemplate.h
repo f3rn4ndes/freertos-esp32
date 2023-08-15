@@ -10,80 +10,64 @@
 #include "freertos/task.h"
 
 // Classes
+template <typename T>
 class RTOSTaskTemplate
 {
-protected:
-    virtual void execute() = 0; // The function that derived classes need to implement
-
-    virtual void setup() = 0; // The function that derived classes need to implement
-
-private:
-    TaskHandle_t taskHandle = nullptr;
-
-    boolean waitForNotification = false; // false = loop task, true = task run under notifications
-
-    uint16_t taskDelay;
-
-    String taskName;
-
-    // Static function that acts as the task entry point
-    static void taskEntryPoint(void *objPtr)
-    {
-        RTOSTaskTemplate *obj = static_cast<RTOSTaskTemplate *>(objPtr);
-        obj->execute(); // Call the overridden run method of derived class
-    }
-
 public:
-    // Default Constructor
     RTOSTaskTemplate() {}
 
-    void create(const char *_taskName, uint16_t _stackSize,
-                UBaseType_t _priority, UBaseType_t _core,
-                boolean _waitForNotification, uint16_t _taskDelay)
+    void create(const char *pTaskName, uint16_t pStackSize,
+                UBaseType_t pPriority, UBaseType_t pCore,
+                boolean pWaitForNotification, uint16_t pTaskDelay)
     {
-        this->taskName = String(_taskName);
-        this->waitForNotification = _waitForNotification;
-        this->taskDelay = _taskDelay;
+        mTaskName = String(pTaskName);
+        mWaitForNotification = pWaitForNotification;
+        mTaskDelay = pTaskDelay;
 
         BaseType_t rc;
         rc = xTaskCreatePinnedToCore(
-            taskEntryPoint,
-            _taskName,
-            _stackSize,
+            taskRunner,
+            pTaskName,
+            pStackSize,
             this,
-            _priority,
-            &taskHandle,
-            _core);
+            pPriority,
+            &mTaskHandle,
+            pCore);
         assert(rc == pdPASS);
+    }
+
+    void notify()
+    {
+        xTaskNotifyGive(mTaskHandle);
     }
 
     void deleteTask()
     {
-        if (taskHandle)
+        if (mTaskHandle)
         {
-            vTaskDelete(taskHandle);
-            taskHandle = nullptr;
+            vTaskDelete(mTaskHandle);
+            mTaskHandle = nullptr;
         }
     }
 
     TaskHandle_t getTaskHandle() const
     {
-        return taskHandle;
+        return mTaskHandle;
     }
 
     boolean getNotification() const
     {
-        return waitForNotification;
+        return mWaitForNotification;
     }
 
     uint16_t getTaskDelay() const
     {
-        return taskDelay;
+        return mTaskDelay;
     }
 
     String getTaskName() const
     {
-        return taskName;
+        return mTaskName;
     }
 
     // Ensure the task is deleted when object is destroyed
@@ -91,4 +75,38 @@ public:
     {
         deleteTask();
     }
+
+    virtual void setup(T &pParameters){}; // The function that derived classes dont need to implement
+
+    virtual void init(){}; // The function that derived classes dont need to implement
+
+private:
+    TaskHandle_t mTaskHandle = nullptr;
+
+    boolean mWaitForNotification = false; // false = loop task, true = task run under notifications
+
+    uint16_t mTaskDelay;
+
+    String mTaskName;
+
+    // Static function that acts as the task entry point
+    static void taskRunner(void *pvParameters)
+    {
+        RTOSTaskTemplate *instance = static_cast<RTOSTaskTemplate *>(pvParameters);
+        for (;;)
+        {
+            if (instance->mWaitForNotification)
+            {
+                ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // Wait indefinitely for a notification
+            }
+            instance->execute(); // Call the overridden run method of derived class
+            if (!instance->mWaitForNotification)
+            {
+                vTaskDelay(instance->mTaskDelay / portTICK_PERIOD_MS);
+            }
+        }
+    }
+
+protected:
+    virtual void execute() = 0; // The function that derived classes need to implement
 };
