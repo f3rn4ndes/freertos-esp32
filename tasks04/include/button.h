@@ -16,13 +16,21 @@
 // Defines
 #define BUTTON_F1 (uint8_t) BOARD_BUTTON_F1_PIN
 #define BUTTON_F2 (uint8_t) BOARD_BUTTON_F2_PIN
+#define BUTTON_F3 (uint8_t) BOARD_BUTTON_F3_PIN
 
 // Data Types - typedefs, structs, unions and/or enumerated
+typedef enum
+{
+    bfChangeLed = 0,
+    bfClearAll
+} ButtonFunction_t;
+
 typedef struct
 {
 
     uint8_t pin;
     uint8_t led;
+    ButtonFunction_t function;
 
 } Button_t;
 
@@ -34,30 +42,45 @@ public:
     {
         mPin = pParameters.pin;
         mLed = pParameters.led;
+        mFunction = pParameters.function;
         pinMode(mPin, INPUT_PULLUP);
+        mFree = true;
     }
 
 private:
     uint8_t mPin = 0;
     uint8_t mLed = 0;
+    ButtonFunction_t mFunction = bfChangeLed;
+    uint8_t mFree = true;
 
 protected:
     void execute() override
     {
-        static int _free = true;
-
         // check pressed
-        if (!digitalRead(mPin) && _free)
+        if (!digitalRead(mPin) && mFree)
         {
-            _free = false;
+            mFree = false;
             // Notify Led Module
-            ledChange(mLed);
+            action();
         }
 
         // check released
-        if (digitalRead(mPin) && !_free)
+        if (digitalRead(mPin) && !mFree)
         {
-            _free = true;
+            mFree = true;
+        }
+    }
+
+    void action()
+    {
+        switch (mFunction)
+        {
+        case bfChangeLed:
+            ledChange(mLed);
+            break;
+        case bfClearAll:
+            ledClearAll();
+            break;
         }
     }
 };
@@ -71,5 +94,6 @@ void buttonInit(void);
 
 ButtonTask buttonF1;
 ButtonTask buttonF2;
+ButtonTask buttonF3;
 
 #endif

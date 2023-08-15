@@ -16,6 +16,11 @@ void appSetup(void)
 
     Serial.begin(APP_MONITOR_SPEED);
     Serial.printf("----- START APPLICATION -----\n");
+}
+
+void appInit(void)
+{
+    AppNotify_t _task;
 
     ledSetup();
     ledInit();
@@ -23,19 +28,30 @@ void appSetup(void)
     buttonSetup();
     buttonInit();
 
-    appExample.create(
-        "Teste 1",
+    appTaskLoop1.create(
+        "Task Loop 1",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
         APP_TASK_CORE,
         SYSTEM_TASK_LOOP,
         APP_TASK_DELAY_MS);
 
-    appExample2.create(
-        "Teste 2",
+    appTaskNotify.create(
+        "Task Notify",
+        APP_TASK_STACK_SIZE,
+        APP_TASK_PRIORITY,
+        APP_TASK_CORE,
+        SYSTEM_TASK_NOTIFY,
+        0);
+
+    _task.taskHandle = appTaskNotify.getTaskHandle();
+    appTaskLoop2.setup(_task);
+
+    appTaskLoop2.create(
+        "Task Loop 2",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
         APP_TASK_CORE,
         SYSTEM_TASK_LOOP,
-        APP_TASK_DELAY_MS * 2);
+        APP_TASK_DELAY_MS * 3);
 }

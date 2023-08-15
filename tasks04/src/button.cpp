@@ -17,11 +17,18 @@ void buttonSetup(void)
 
     _button.pin = BUTTON_F1;
     _button.led = LED_F1;
+    _button.function = bfChangeLed;
     buttonF1.setup(_button);
 
     _button.pin = BUTTON_F2;
     _button.led = LED_F2;
+    _button.function = bfChangeLed;
     buttonF2.setup(_button);
+
+    _button.pin = BUTTON_F3;
+    _button.led = 0;
+    _button.function = bfClearAll;
+    buttonF3.setup(_button);
 }
 
 void buttonInit(void)
@@ -42,4 +49,12 @@ void buttonInit(void)
         BUTTON_F2_TASK_CORE,
         SYSTEM_TASK_LOOP,
         BUTTON_F2_TASK_DELAY_MS);
+
+    buttonF3.create(
+        "BUTTON F3",
+        BUTTON_F3_TASK_STACK_SIZE,
+        BUTTON_F3_TASK_PRIORITY,
+        BUTTON_F3_TASK_CORE,
+        SYSTEM_TASK_LOOP,
+        BUTTON_F3_TASK_DELAY_MS);
 }

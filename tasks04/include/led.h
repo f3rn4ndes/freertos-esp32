@@ -105,6 +105,12 @@ public:
         mChange = true;
     }
 
+    void clear()
+    {
+        mMode = lmCustom;
+        mChange = true;
+    }
+
 private:
     uint8_t mPin = 0;
     uint8_t mMode = lmClear;
@@ -141,6 +147,7 @@ protected:
 void ledSetup(void);
 void ledInit(void);
 void ledChange(uint8_t pLed);
+void ledClearAll(void);
 
 // Local Variables
 #ifdef _LED_

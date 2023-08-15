@@ -46,3 +46,9 @@ void ledChange(uint8_t pLed)
         break;
     }
 }
+
+void ledClearAll(void)
+{
+    ledF1.clear();
+    ledF2.clear();
+}
