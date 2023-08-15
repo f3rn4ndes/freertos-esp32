@@ -80,6 +80,8 @@ public:
 
     virtual void init(){}; // The function that derived classes dont need to implement
 
+    // virtual void any() = 0; // The pure ( = 0) function that derived classes MUST be implemented
+
 private:
     TaskHandle_t mTaskHandle = nullptr;
 
