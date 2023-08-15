@@ -120,25 +120,22 @@ private:
 protected:
     void execute() override
     {
-        for (;;)
+        if (mChange)
         {
-            if (mChange)
-            {
-                mChange = false;
-                ++mMode %= (lmCustom + 1);
-                mModePtr = LED_MODES[mMode];
-                Serial.printf("Led Mode: %d\n", mMode);
-            }
+            mChange = false;
+            ++mMode %= (lmCustom + 1);
+            mModePtr = LED_MODES[mMode];
+            Serial.printf("Led Mode: %d\n", mMode);
+        }
 
-            digitalWrite(mPin, mModePtr->state);
-            vTaskDelay(pdMS_TO_TICKS(mModePtr->delay));
+        digitalWrite(mPin, mModePtr->state);
+        vTaskDelay(pdMS_TO_TICKS(mModePtr->delay));
 
-            mModePtr++;
+        mModePtr++;
 
-            if (mModePtr->delay == 0)
-            {
-                mModePtr = LED_MODES[mMode];
-            }
+        if (mModePtr->delay == 0)
+        {
+            mModePtr = LED_MODES[mMode];
         }
     }
 };

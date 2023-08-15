@@ -21,12 +21,16 @@ Feature: Indicadores luminosos com padrões de sinalização individualizados
     cores de sinalização auditiva.
 
 
-    Scenario: Trocar o padrão de sinalização
-        Given Se queira trocar o padrão de exibição
-        Then pressionar o botão do led corresponde
-        And Notificar a funcionalidade que controla o led para realizar a troca de padrão
+    Scenario: Troca de padrão de sinalização de um indicador luminoso
+        Given Com o dispositivo em funcionamento, necessita trocar o padrão de exibição
+        Then pressionar o botão que altera o padrão de sinalização do indicador luminoso corresponde
+        Then Verificar a troca do padrão de sinalização do indicador luminoso
 
 
+    Scenario: Inicialização dos indicadores luminosos
+        Given Com o sistema em funcionamento, iniciar os padrões de sinalização (indicadores apagados)
+        Then Pressionar botão de inicialização dos indicadores luminosos
+        Then Verificar que os indicadores ficam no padrão inicial (apagados)
 
 
 
