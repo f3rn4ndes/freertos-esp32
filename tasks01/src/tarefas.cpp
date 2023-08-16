@@ -3,10 +3,10 @@
   All rights reserved.
 */
 
-/* Defines */
+// Defines
 #define _TAREFAS_
 
-/* Includes */
+// Includes
 #include "tarefas.h"
 
 /* Functions */

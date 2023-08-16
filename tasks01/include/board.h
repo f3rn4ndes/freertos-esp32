@@ -5,24 +5,24 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-/* Includes */
+// Includes
 #include <Arduino.h>
 
 
-/* Defines */
+// Defines
 
-/* Data Types - typedefs, structs, unions and/or enumerated */
+// Data Types - typedefs, structs, unions and/or enumerated
 
-/* Public Functions */
+// Public Functions
 
-/* Local Functions */
+// Local Functions
 #ifdef _BOARD_
 
 #endif
 
-/* Public Variables */
+// Public Variables
 
-/* Local Variables */
+// Local Variables
 #ifdef _BOARD_
 
 #endif

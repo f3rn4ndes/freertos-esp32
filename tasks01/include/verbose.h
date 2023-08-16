@@ -5,7 +5,7 @@
 #ifndef VERBOSE_H
 #define VERBOSE_H
 
-/* Defines */
+// Defines
 #define VERBOSE_OFF 0
 #define VERBOSE_ON  1
 

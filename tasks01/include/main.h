@@ -5,28 +5,28 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-/* Includes */
+// Includes
 #include <Arduino.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "app.h"
 
 
-/* Defines */
+// Defines
 
-/* Data Types - typedefs, structs, unions and/or enumerated */
+// Data Types - typedefs, structs, unions and/or enumerated
 
-/* Public Functions */
+// Public Functions
 
-/* Local Functions */
+// Local Functions
 #ifdef _MAIN_
 
 
 #endif
 
-/* Public Variables */
+// Public Variables
 
-/* Local Variables */
+// Local Variables
 #ifdef _MAIN_
 
 #endif

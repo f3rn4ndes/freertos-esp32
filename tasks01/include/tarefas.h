@@ -5,21 +5,21 @@
 #ifndef TAREFAS_H
 #define TAREFAS_H
 
-/* Includes */
+// Includes
 #include <Arduino.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "systemtasks.h"
 
-/* Defines */
+// Defines
 
-/* Data Types - typedefs, structs, unions and/or enumerated */
+// Data Types - typedefs, structs, unions and/or enumerated
 
-/* Public Functions */
+// Public Functions
 void tarefasSetup(void);
 void tarefasResumeTasks(void);
 
-/* Local Functions */
+// Local Functions
 #ifdef _TAREFAS_
 
 	void tarefasInit(void);
@@ -38,9 +38,9 @@ void tarefasResumeTasks(void);
 
 #endif
 
-/* Public Variables */
+// Public Variables
 
-/* Local Variables */
+// Local Variables
 #ifdef _TAREFAS_
 
 	static TaskHandle_t tarefasTaskHandle = NULL;

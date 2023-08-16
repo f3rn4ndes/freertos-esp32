@@ -6,7 +6,7 @@
 #ifndef SYSTEMTASKS_H
 #define SYSTEMTASKS_H
 
-/* Defines */
+// Defines
 /* Task Stack Size */
 #define APP_DEFAULT_STACK_SIZE 3000
 #define APP_TASK_STACK_SIZE APP_DEFAULT_STACK_SIZE
