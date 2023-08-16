@@ -11,6 +11,7 @@
 #include "systemtasks.h"
 #include "board.h"
 #include "led.h"
+#include "verbose.h"
 #include "rtostasktemplate.h"
 
 // Defines

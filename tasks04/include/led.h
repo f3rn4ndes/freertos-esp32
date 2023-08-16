@@ -8,9 +8,10 @@
 #include <Arduino.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "rtostasktemplate.h"
 #include "systemtasks.h"
 #include "board.h"
+#include "verbose.h"
+#include "rtostasktemplate.h"
 
 // Defines
 #define LED_OFF 0
@@ -125,7 +126,7 @@ protected:
             mChange = false;
             ++mMode %= (lmCustom + 1);
             mModePtr = LED_MODES[mMode];
-            Serial.printf("Led Mode: %d\n", mMode);
+            VERBOSE((String)"Led Mode: " + String(mMode), VERBOSE_TASK_LED);
         }
 
         digitalWrite(mPin, mModePtr->state);

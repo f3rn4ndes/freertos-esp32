@@ -15,6 +15,8 @@ void buttonSetup(void)
 {
     Button_t _button;
 
+    VERBOSE((String) "Function: " + __func__, VERBOSE_MODULE_BUTTON);
+
     _button.pin = BUTTON_F1;
     _button.led = LED_F1;
     _button.function = bfChangeLed;
@@ -33,6 +35,8 @@ void buttonSetup(void)
 
 void buttonInit(void)
 {
+
+    VERBOSE((String) "Function: " + __func__, VERBOSE_MODULE_BUTTON);
 
     buttonF1.create(
         "BUTTON F1",

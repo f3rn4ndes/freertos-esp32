@@ -15,12 +15,17 @@ void appSetup(void)
 {
 
     Serial.begin(APP_MONITOR_SPEED);
-    Serial.printf("----- START APPLICATION -----\n");
+    verboseSetup();
+    verboseInit();
+
+    VERBOSE((String) "----- START APPLICATION -----", VERBOSE_MODULE_APP);
 }
 
 void appInit(void)
 {
     AppNotify_t _task;
+
+    VERBOSE((String) "Function: " + __func__, VERBOSE_MODULE_APP);
 
     ledSetup();
     ledInit();

@@ -11,6 +11,7 @@
 #include "rtostasktemplate.h"
 #include "led.h"
 #include "button.h"
+#include "verbose.h"
 
 // Defines
 #define APP_INITIAL_DELAY_MS 2000
@@ -40,7 +41,7 @@ private:
 protected:
     void execute() override
     {
-        Serial.println((String) "Task: " + getTaskName() + " - Task Delay: " + getTaskDelay());
+        VERBOSE((String) "Task: " + getTaskName() + " - Task Delay: " + getTaskDelay(), VERBOSE_TASK_APP);
         action();
     }
 
