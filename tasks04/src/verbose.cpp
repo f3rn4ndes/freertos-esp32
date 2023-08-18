@@ -27,17 +27,3 @@ void verboseInit(void)
         VERBOSE_TASK_DELAY_MS);
 }
 
-void verboseEnable(uint8_t pStatus)
-{
-    verbose.enabled(pStatus);
-}
-
-void verboseInsert(String pMessage, uint8_t pSession)
-{
-    VerboseItem_t _item;
-    if (pSession)
-    {
-        _item.message = pMessage;
-        verbose.push(_item);
-    }
-}

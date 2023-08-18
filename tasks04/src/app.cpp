@@ -12,6 +12,10 @@ void appSetup(void)
     Serial.begin(APP_MONITOR_SPEED);
     verboseSetup();
     verboseInit();
+    sysClockSetup();
+
+    // Enable Timer
+    sysClockTimerMSControl(ctTimer01, CLOCK_TIMER_ENABLED);
 
     VERBOSE((String) "----- START APPLICATION -----", VERBOSE_MODULE_APP);
 }

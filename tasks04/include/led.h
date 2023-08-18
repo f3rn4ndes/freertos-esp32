@@ -4,10 +4,11 @@
 #include <Arduino.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "rtostasktemplate.h"
 #include "systemtasks.h"
 #include "board.h"
 #include "verbose.h"
-#include "rtostasktemplate.h"
+#include "sysclock.h"
 
 // Defines
 #define LED_OFF 0
@@ -16,6 +17,7 @@
 #define LED_F2 BOARD_LED_F2_PIN
 
 // External Objects
+extern VerboseTask verbose;
 
 // Data Types - typedefs, structs, unions and/or enumerated
 #define LEDMODE_MAX_ITENS 10
@@ -80,7 +82,6 @@ typedef struct
 {
     unsigned char pin;
     unsigned char mode; // led mode
-    unsigned char change;
 } Led_t;
 
 // Classes
@@ -89,30 +90,30 @@ class LedTask : public RTOSTaskTemplate<Led_t>
 public:
     void setup(Led_t &pParameters) override
     {
-        mPin = pParameters.pin;
-        pinMode(mPin, OUTPUT);
-        digitalWrite(mPin, LOW);
 
-        mMode = pParameters.mode;
-        mChange = pParameters.change;
+        mLed = pParameters;
 
-        mModePtr = LED_MODES[mMode];
+        pinMode(mLed.pin, OUTPUT);
+        digitalWrite(mLed.pin, LOW);
+
+        mModePtr = LED_MODES[mLed.mode];
+
+        mChange = false;
     }
 
-    void setChange()
+    void changeMode(void)
     {
         mChange = true;
     }
 
-    void clear()
+    void clear(void)
     {
-        mMode = lmCustom;
+        mLed.mode = lmCustom;
         mChange = true;
     }
 
 private:
-    uint8_t mPin = 0;
-    uint8_t mMode = lmClear;
+    Led_t mLed;
     uint8_t mChange = false;
     const LedMode_t *mModePtr = nullptr;
 
@@ -122,19 +123,19 @@ protected:
         if (mChange)
         {
             mChange = false;
-            ++mMode %= (lmCustom + 1);
-            mModePtr = LED_MODES[mMode];
-            VERBOSE((String) "Led Mode: " + String(mMode), VERBOSE_TASK_LED);
+            ++mLed.mode %= (lmCustom + 1);
+            mModePtr = LED_MODES[mLed.mode];
+            VERBOSE((String) "Task: " + getTaskName() + " - Led Mode: " + String(mLed.mode), VERBOSE_TASK_LED);
         }
 
-        digitalWrite(mPin, mModePtr->state);
+        digitalWrite(mLed.pin, mModePtr->state);
         vTaskDelay(pdMS_TO_TICKS(mModePtr->delay));
 
         mModePtr++;
 
         if (mModePtr->delay == 0)
         {
-            mModePtr = LED_MODES[mMode];
+            mModePtr = LED_MODES[mLed.mode];
         }
     }
 };
@@ -142,5 +143,3 @@ protected:
 // Public functions
 void ledSetup(void);
 void ledInit(void);
-void ledChange(uint8_t pLed);
-void ledClearAll(void);

@@ -13,17 +13,16 @@ void buttonSetup(void)
     VERBOSE((String) "Function: " + __func__, VERBOSE_MODULE_BUTTON);
 
     _button.pin = BUTTON_F1;
-    _button.led = LED_F1;
-    _button.function = bfChangeLed;
+    _button.function = bfChangeLedF1;
+
     buttonF1.setup(_button);
 
     _button.pin = BUTTON_F2;
-    _button.led = LED_F2;
-    _button.function = bfChangeLed;
+    _button.function = bfChangeLedF2;
+
     buttonF2.setup(_button);
 
     _button.pin = BUTTON_F3;
-    _button.led = 0;
     _button.function = bfClearAll;
     buttonF3.setup(_button);
 }

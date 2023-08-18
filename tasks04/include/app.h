@@ -8,6 +8,7 @@
 #include "led.h"
 #include "button.h"
 #include "verbose.h"
+#include "sysclock.h"
 
 // Defines
 #define APP_INITIAL_DELAY_MS 2000
@@ -52,7 +53,10 @@ protected:
     void action()
     {
         if (mNotification)
+        {
+            sysClockTimerMSShowElapse(ctTimer01, CLOCK_TIMER_RESET);
             xTaskNotifyGive(mTaskHandleNotifier);
+        }
     }
 };
 

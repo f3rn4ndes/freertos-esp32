@@ -14,15 +14,18 @@
 #define VERBOSE_MAX_MESSAGE_LENGTH 50
 #define VERBOSE_FIFO_SIZE 30
 
+#define VERBOSE_SYSTEM VERBOSE_ON
+
 #define VERBOSE_MODULE_APP VERBOSE_ON
 #define VERBOSE_MODULE_LED VERBOSE_ON
 #define VERBOSE_MODULE_BUTTON VERBOSE_ON
+#define VERBOSE_MODULE_SYSCLOCK VERBOSE_ON
 
 #define VERBOSE_TASK_APP VERBOSE_ON
 #define VERBOSE_TASK_LED VERBOSE_ON
 #define VERBOSE_TASK_BUTTON VERBOSE_ON
 
-#define VERBOSE(M, S) verboseInsert(M, S)
+#define VERBOSE(M, S) verbose.insert(M, S)
 
 // Data Types - typedefs, structs, unions and/or enumerated
 typedef struct
@@ -50,6 +53,24 @@ public:
     {
         mEnabled = pStatus;
     }
+
+    void insert(String pMessage, uint8_t pSession)
+    {
+        VerboseItem_t _item;
+        if (pSession && VERBOSE_SYSTEM)
+        {
+            _item.message = pMessage;
+            push(_item);
+        }
+    }
+
+private:
+    uint8_t mEnabled;
+    uint8_t mMaxLength;
+    uint8_t mHead = 0;
+    uint8_t mTail = 0;
+    boolean mBusy = false;
+    VerboseItem_t mVerboseFifo[VERBOSE_FIFO_SIZE];
 
     void push(VerboseItem_t pFifoItem)
     {
@@ -90,14 +111,6 @@ public:
         }
     }
 
-private:
-    uint8_t mEnabled;
-    uint8_t mMaxLength;
-    uint8_t mHead = 0;
-    uint8_t mTail = 0;
-    boolean mBusy = false;
-    VerboseItem_t mVerboseFifo[VERBOSE_FIFO_SIZE];
-
 protected:
     void execute() override
     {
@@ -128,4 +141,3 @@ protected:
 // Public Functions
 void verboseSetup(void);
 void verboseInit(void);
-void verboseInsert(String pMessage, uint8_t pSession);

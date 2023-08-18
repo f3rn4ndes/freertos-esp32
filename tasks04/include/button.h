@@ -4,11 +4,12 @@
 #include <Arduino.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "rtostasktemplate.h"
 #include "systemtasks.h"
 #include "board.h"
 #include "led.h"
 #include "verbose.h"
-#include "rtostasktemplate.h"
+#include "sysclock.h"
 
 // Defines
 #define BUTTON_F1 (uint8_t) BOARD_BUTTON_F1_PIN
@@ -16,21 +17,23 @@
 #define BUTTON_F3 (uint8_t) BOARD_BUTTON_F3_PIN
 
 // External Objects
+extern LedTask ledF1;
+extern LedTask ledF2;
+extern VerboseTask verbose;
 
 // Data Types - typedefs, structs, unions and/or enumerated
+
 typedef enum
 {
-    bfChangeLed = 0,
+    bfChangeLedF1 = 0,
+    bfChangeLedF2,
     bfClearAll
 } ButtonFunction_t;
 
 typedef struct
 {
-
     uint8_t pin;
-    uint8_t led;
     ButtonFunction_t function;
-
 } Button_t;
 
 // Classes
@@ -39,32 +42,28 @@ class ButtonTask : public RTOSTaskTemplate<Button_t>
 public:
     void setup(Button_t &pParameters) override
     {
-        mPin = pParameters.pin;
-        mLed = pParameters.led;
-        mFunction = pParameters.function;
-        pinMode(mPin, INPUT_PULLUP);
+        mButton = pParameters;
+        pinMode(mButton.pin, INPUT_PULLUP);
         mFree = true;
     }
 
 private:
-    uint8_t mPin = 0;
-    uint8_t mLed = 0;
-    ButtonFunction_t mFunction = bfChangeLed;
+    Button_t mButton;
+
     uint8_t mFree = true;
 
 protected:
     void execute() override
     {
         // check pressed
-        if (!digitalRead(mPin) && mFree)
+        if (!digitalRead(mButton.pin) && mFree)
         {
             mFree = false;
-            // Notify Led Module
             action();
         }
 
         // check released
-        if (digitalRead(mPin) && !mFree)
+        if (digitalRead(mButton.pin) && !mFree)
         {
             mFree = true;
         }
@@ -72,13 +71,19 @@ protected:
 
     void action()
     {
-        switch (mFunction)
+        VERBOSE((String) "Task: " + getTaskName() + " - Button Pressed", VERBOSE_TASK_BUTTON);
+
+        switch (mButton.function)
         {
-        case bfChangeLed:
-            ledChange(mLed);
+        case bfChangeLedF1:
+            ledF1.changeMode();
+            break;
+        case bfChangeLedF2:
+            ledF2.changeMode();
             break;
         case bfClearAll:
-            ledClearAll();
+            ledF1.clear();
+            ledF2.clear();
             break;
         }
     }
