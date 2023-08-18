@@ -10,8 +10,10 @@ void appSetup(void)
 {
 
     Serial.begin(APP_MONITOR_SPEED);
+
     verboseSetup();
     verboseInit();
+
     sysClockSetup();
 
     // Enable Timer
@@ -49,6 +51,7 @@ void appInit(void)
         0);
 
     _task.taskHandle = appTaskNotify.getTaskHandle();
+
     appTaskLoop2.setup(_task);
 
     appTaskLoop2.createTask(

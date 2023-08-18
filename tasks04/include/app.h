@@ -35,12 +35,14 @@ class AppTask : public RTOSTaskTemplate<AppNotify_t>
 public:
     void setup(AppNotify_t &pParameters) override
     {
-        mTaskHandleNotifier = pParameters.taskHandle;
-        mNotification = true;
+        mApp = pParameters;
+
+        mNotification = (mApp.taskHandle != nullptr) ? true : false;
     }
 
 private:
-    TaskHandle_t mTaskHandleNotifier = nullptr;
+    AppNotify_t mApp;
+
     boolean mNotification = false;
 
 protected:
@@ -55,7 +57,8 @@ protected:
         if (mNotification)
         {
             sysClockTimerMSShowElapse(ctTimer01, CLOCK_TIMER_RESET);
-            xTaskNotifyGive(mTaskHandleNotifier);
+            VERBOSE((String) "Task: " + getTaskName() + " - Notify Task: " + pcTaskGetName(mApp.taskHandle), VERBOSE_TASK_APP);
+            xTaskNotifyGive(mApp.taskHandle);
         }
     }
 };

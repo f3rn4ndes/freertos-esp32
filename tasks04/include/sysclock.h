@@ -22,26 +22,20 @@
 // External Objects
 extern VerboseTask verbose;
 
-    // Data Types - typedefs, structs, unions and/or enumerated
-    typedef enum {
-        ctTimer01 = 0,
-        ctTimer02,
-        ctTimer03,
-        ctTimer04,
-        ctTimer05,
-        ctTimer06,
-        ctTimer07,
-        ctTimer08,
-        ctTimer09,
-        ctTimer10
-    } ClockTimer_t;
-
-typedef struct
+// Data Types - typedefs, structs, unions and/or enumerated
+typedef enum
 {
-    boolean synchronized;
-    timeval current;
-    unsigned long timeoutCounter;
-} sysClock_t;
+    ctTimer01 = 0,
+    ctTimer02,
+    ctTimer03,
+    ctTimer04,
+    ctTimer05,
+    ctTimer06,
+    ctTimer07,
+    ctTimer08,
+    ctTimer09,
+    ctTimer10
+} ClockTimer_t;
 
 typedef struct
 {

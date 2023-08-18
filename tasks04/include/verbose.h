@@ -57,10 +57,10 @@ public:
     void insert(String pMessage, uint8_t pSession)
     {
         VerboseItem_t _item;
-        if (pSession && VERBOSE_SYSTEM)
+        if (pSession && VERBOSE_SYSTEM && mEnabled)
         {
             _item.message = pMessage;
-            push(_item);
+            enqueue(_item);
         }
     }
 
@@ -72,7 +72,7 @@ private:
     boolean mBusy = false;
     VerboseItem_t mVerboseFifo[VERBOSE_FIFO_SIZE];
 
-    void push(VerboseItem_t pFifoItem)
+    void enqueue(VerboseItem_t pFifoItem)
     {
         if (!mBusy)
         {

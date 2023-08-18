@@ -44,28 +44,28 @@ public:
     {
         mButton = pParameters;
         pinMode(mButton.pin, INPUT_PULLUP);
-        mFree = true;
+        mPressed = false;
     }
 
 private:
     Button_t mButton;
 
-    uint8_t mFree = true;
+    uint8_t mPressed = false;
 
 protected:
     void execute() override
     {
         // check pressed
-        if (!digitalRead(mButton.pin) && mFree)
+        if (!digitalRead(mButton.pin) && !mPressed)
         {
-            mFree = false;
             action();
+            mPressed = true;
         }
 
         // check released
-        if (digitalRead(mButton.pin) && !mFree)
+        if (digitalRead(mButton.pin) && mPressed)
         {
-            mFree = true;
+            mPressed = false;
         }
     }
 
