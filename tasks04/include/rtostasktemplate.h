@@ -1,7 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
 #pragma once
 
 // Includes
@@ -16,9 +12,9 @@ class RTOSTaskTemplate
 public:
     RTOSTaskTemplate() {}
 
-    void create(const char *pTaskName, uint16_t pStackSize,
-                UBaseType_t pPriority, UBaseType_t pCore,
-                boolean pWaitForNotification, uint16_t pTaskDelay)
+    void createTask(const char *pTaskName, uint16_t pStackSize,
+                    UBaseType_t pPriority, UBaseType_t pCore,
+                    boolean pWaitForNotification, uint16_t pTaskDelay)
     {
         mTaskName = String(pTaskName);
         mWaitForNotification = pWaitForNotification;
@@ -45,7 +41,7 @@ public:
         }
     }
 
-    void notify()
+    void notifyTask()
     {
         xTaskNotifyGive(mTaskHandle);
     };
@@ -55,7 +51,7 @@ public:
         return mTaskHandle;
     }
 
-    boolean getNotification() const
+    boolean getWaitForNotification() const
     {
         return mWaitForNotification;
     }
@@ -79,8 +75,6 @@ public:
     virtual void setup(T &pParameters){}; // The function that derived classes dont need to implement
 
     virtual void init(){}; // The function that derived classes dont need to implement
-
-    // virtual void any() = 0; // The pure ( = 0) function that derived classes MUST be implemented
 
 private:
     TaskHandle_t mTaskHandle = nullptr;

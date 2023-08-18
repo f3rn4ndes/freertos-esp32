@@ -1,7 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
 #pragma once
 
 // Includes
@@ -16,6 +12,14 @@
 // Defines
 #define APP_INITIAL_DELAY_MS 2000
 #define APP_MONITOR_SPEED 115200
+
+// External Objects
+extern LedTask ledF1;
+extern LedTask ledF2;
+extern VerboseTask verbose;
+extern ButtonTask buttonF1;
+extern ButtonTask buttonF2;
+extern ButtonTask buttonF3;
 
 // Data Types - typedefs, structs, unions and/or enumerated
 typedef struct
@@ -55,11 +59,3 @@ protected:
 // Public Functions
 void appSetup(void);
 void appInit(void);
-
-// Local Variables and Objects
-#ifdef _APP_
-AppTask appTaskLoop1;
-AppTask appTaskLoop2;
-AppTask appTaskNotify;
-
-#endif

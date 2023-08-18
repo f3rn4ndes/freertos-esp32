@@ -1,7 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
 #pragma once
 
 // Includes
@@ -18,6 +14,8 @@
 #define BUTTON_F1 (uint8_t) BOARD_BUTTON_F1_PIN
 #define BUTTON_F2 (uint8_t) BOARD_BUTTON_F2_PIN
 #define BUTTON_F3 (uint8_t) BOARD_BUTTON_F3_PIN
+
+// External Objects
 
 // Data Types - typedefs, structs, unions and/or enumerated
 typedef enum
@@ -89,12 +87,3 @@ protected:
 // Public Functions
 void buttonSetup(void);
 void buttonInit(void);
-
-// Local Variables
-#ifdef _BUTTON_
-
-ButtonTask buttonF1;
-ButtonTask buttonF2;
-ButtonTask buttonF3;
-
-#endif

@@ -1,8 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
-
 #pragma once
 
 // Defines

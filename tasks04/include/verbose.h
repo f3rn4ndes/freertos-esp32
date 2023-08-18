@@ -1,7 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
 #pragma once
 
 // Includes
@@ -50,6 +46,11 @@ public:
         mMaxLength = pParameters.maxLength;
     }
 
+    void enabled(uint8_t pStatus)
+    {
+        mEnabled = pStatus;
+    }
+
     void push(VerboseItem_t pFifoItem)
     {
         if (!mBusy)
@@ -87,11 +88,6 @@ public:
 
             mBusy = false;
         }
-    }
-
-    void enabled(uint8_t pStatus)
-    {
-        mEnabled = pStatus;
     }
 
 private:
@@ -133,11 +129,3 @@ protected:
 void verboseSetup(void);
 void verboseInit(void);
 void verboseInsert(String pMessage, uint8_t pSession);
-void verboseEnable(uint8_t pStatus);
-
-// Local Variables
-#ifdef _VERBOSE_
-
-VerboseTask verbose;
-
-#endif

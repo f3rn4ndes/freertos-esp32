@@ -1,7 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
 #pragma once
 
 // Includes
@@ -18,6 +14,8 @@
 #define LED_ON 1
 #define LED_F1 BOARD_LED_F1_PIN
 #define LED_F2 BOARD_LED_F2_PIN
+
+// External Objects
 
 // Data Types - typedefs, structs, unions and/or enumerated
 #define LEDMODE_MAX_ITENS 10
@@ -126,7 +124,7 @@ protected:
             mChange = false;
             ++mMode %= (lmCustom + 1);
             mModePtr = LED_MODES[mMode];
-            VERBOSE((String)"Led Mode: " + String(mMode), VERBOSE_TASK_LED);
+            VERBOSE((String) "Led Mode: " + String(mMode), VERBOSE_TASK_LED);
         }
 
         digitalWrite(mPin, mModePtr->state);
@@ -146,11 +144,3 @@ void ledSetup(void);
 void ledInit(void);
 void ledChange(uint8_t pLed);
 void ledClearAll(void);
-
-// Local Variables
-#ifdef _LED_
-
-LedTask ledF1;
-LedTask ledF2;
-
-#endif

@@ -1,16 +1,11 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
-
-// Defines
-#define _BUTTON_
-
-// Includes
 #include "button.h"
 
-// Functions
+// Objects
+ButtonTask buttonF1;
+ButtonTask buttonF2;
+ButtonTask buttonF3;
 
+// Functions
 void buttonSetup(void)
 {
     Button_t _button;
@@ -38,7 +33,7 @@ void buttonInit(void)
 
     VERBOSE((String) "Function: " + __func__, VERBOSE_MODULE_BUTTON);
 
-    buttonF1.create(
+    buttonF1.createTask(
         "BUTTON F1",
         BUTTON_F1_TASK_STACK_SIZE,
         BUTTON_F1_TASK_PRIORITY,
@@ -46,7 +41,7 @@ void buttonInit(void)
         SYSTEM_TASK_LOOP,
         BUTTON_F1_TASK_DELAY_MS);
 
-    buttonF2.create(
+    buttonF2.createTask(
         "BUTTON F2",
         BUTTON_F2_TASK_STACK_SIZE,
         BUTTON_F2_TASK_PRIORITY,
@@ -54,7 +49,7 @@ void buttonInit(void)
         SYSTEM_TASK_LOOP,
         BUTTON_F2_TASK_DELAY_MS);
 
-    buttonF3.create(
+    buttonF3.createTask(
         "BUTTON F3",
         BUTTON_F3_TASK_STACK_SIZE,
         BUTTON_F3_TASK_PRIORITY,

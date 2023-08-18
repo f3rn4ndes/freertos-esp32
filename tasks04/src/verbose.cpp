@@ -1,13 +1,8 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
-
-// Defines
-#define _VERBOSE_
-
 // Includes
 #include "verbose.h"
+
+// Objects
+VerboseTask verbose;
 
 // Functions
 
@@ -23,7 +18,7 @@ void verboseSetup(void)
 
 void verboseInit(void)
 {
-    verbose.create(
+    verbose.createTask(
         "VERBOSE",
         VERBOSE_TASK_STACK_SIZE,
         VERBOSE_TASK_PRIORITY,

@@ -1,12 +1,3 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
-
-// Defines
-#define _MAIN_
-
-// Includes
 #include "main.h"
 
 // Functions

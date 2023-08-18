@@ -1,16 +1,11 @@
-/*
-  Copyright (c), 2023
-  All rights reserved.
-*/
-
-// Defines
-#define _APP_
-
-// Includes
 #include "app.h"
 
-/* Functions */
+// Objects
+AppTask appTaskLoop1;
+AppTask appTaskLoop2;
+AppTask appTaskNotify;
 
+// Functions
 void appSetup(void)
 {
 
@@ -33,7 +28,7 @@ void appInit(void)
     buttonSetup();
     buttonInit();
 
-    appTaskLoop1.create(
+    appTaskLoop1.createTask(
         "Task Loop 1",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
@@ -41,7 +36,7 @@ void appInit(void)
         SYSTEM_TASK_LOOP,
         APP_TASK_DELAY_MS);
 
-    appTaskNotify.create(
+    appTaskNotify.createTask(
         "Task Notify",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
@@ -52,7 +47,7 @@ void appInit(void)
     _task.taskHandle = appTaskNotify.getTaskHandle();
     appTaskLoop2.setup(_task);
 
-    appTaskLoop2.create(
+    appTaskLoop2.createTask(
         "Task Loop 2",
         APP_TASK_STACK_SIZE,
         APP_TASK_PRIORITY,
