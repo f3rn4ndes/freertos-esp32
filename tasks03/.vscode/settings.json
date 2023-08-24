@@ -1,5 +1,4 @@
 {
-  "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.cCompilerPath": "C:/Users/fernandes/.platformio/packages/toolchain-xtensa-esp32@8.4.0+2021r2-patch5/bin/xtensa-esp32-elf-gcc.exe",
   "C_Cpp_Runner.cppCompilerPath": "C:/Users/fernandes/.platformio/packages/toolchain-xtensa-esp32@8.4.0+2021r2-patch5/bin/xtensa-esp32-elf-g++.exe",
   "C_Cpp_Runner.debuggerPath": "C:/Users/fernandes/.platformio/packages/toolchain-xtensa-esp32@8.4.0+2021r2-patch5/bin/xtensa-esp32-elf-gdb.exe",

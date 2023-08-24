@@ -2,7 +2,8 @@
   Copyright (c), 2023
   All rights reserved.
 */
-@pragma once
+#ifndef BOARD_H
+#define BOARD_H
 
 // Includes
 #include <Arduino.h>
@@ -13,3 +14,5 @@
 
 #define BOARD_BUTTON1_PIN GPIO_NUM_16
 #define BOARD_BUTTON2_PIN GPIO_NUM_17
+
+#endif

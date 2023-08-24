@@ -22,15 +22,17 @@ Feature: Indicadores luminosos com padrões de sinalização individualizados
 
 
     Scenario: Troca de padrão de sinalização de um indicador luminoso
-        Given Com o dispositivo em funcionamento, necessita trocar o padrão de exibição
-        Then pressionar o botão que altera o padrão de sinalização do indicador luminoso corresponde
-        Then Verificar a troca do padrão de sinalização do indicador luminoso
+        Given Com o dispositivo em funcionamento,
+        When Usuário necessita trocar o padrão de exibição de um indicador luminoso
+        Then Usuário deve pressionar o botão que altera o padrão de sinalização do indicador luminoso corresponde
+        And  Verificar a troca do padrão de sinalização do indicador luminoso
 
 
     Scenario: Inicialização dos indicadores luminosos
-        Given Com o sistema em funcionamento, iniciar os padrões de sinalização (indicadores apagados)
-        Then Pressionar botão de inicialização dos indicadores luminosos
-        Then Verificar que os indicadores ficam no padrão inicial (apagados)
+        Given Com o sistema em funcionamento
+        When O usuário necessita reiniciar os padrões de sinalização (indicadores apagados)
+        Then Deve pressionar botão de inicialização dos indicadores luminosos
+        And Verificar que os indicadores ficam no padrão inicial (apagados)
 
 
 
