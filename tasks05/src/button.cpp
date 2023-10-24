@@ -24,10 +24,13 @@ void buttonSetup(void)
 
     _button.pin = BUTTON_F3;
     _button.function = bfInitStatus;
+
     buttonF3.setup(_button);
 
-    buttonF1.attach(&ledF1);
+    buttonF1.attach(&ledF1); // led 1 vai ser notificado pelo botao 1
+
     buttonF2.attach(&ledF2);
+
     buttonF3.attach(&ledF1);
     buttonF3.attach(&ledF2);
 }

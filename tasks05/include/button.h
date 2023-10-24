@@ -67,22 +67,7 @@ protected:
     void action()
     {
         VERBOSE((String) "Task: " + getTaskName() + " - Button Pressed", VERBOSE_TASK_BUTTON);
-
         notify((uint8_t)mButton.function);
-
-        // switch (mButton.function)
-        // {
-        // case bfChangeLedF1:
-        //     ledF1.changeMode();
-        //     break;
-        // case bfChangeLedF2:
-        //     ledF2.changeMode();
-        //     break;
-        // case bfClearAll:
-        //     ledF1.clear();
-        //     ledF2.clear();
-        //     break;
-        // }
     }
 };
 
