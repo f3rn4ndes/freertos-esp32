@@ -25,13 +25,13 @@ void buttonsSetup(void);
 /* Local Functions */
 #ifdef _BUTTONS_
 
-void buttonsInit(void);
-
 void button1TaskCreate(void);
 void button2TaskCreate(void);
 
 static void button1Task(void *pvParameters);
 static void button2Task(void *pvParameters);
+
+void buttonsInit(void);
 
 #endif
 

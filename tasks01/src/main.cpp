@@ -3,10 +3,10 @@
   All rights reserved.
 */
 
-/* Defines */
+// Defines
 #define _MAIN_
 
-/* Includes */
+// Includes
 #include "main.h"
 
 /* Functions */

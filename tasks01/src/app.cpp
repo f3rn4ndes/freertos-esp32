@@ -3,10 +3,10 @@
   All rights reserved.
 */
 
-/* Defines */
+// Defines
 #define _APP_
 
-/* Includes */
+// Includes
 #include "app.h"
 
 /* Functions */
