@@ -1,6 +1,6 @@
 /*
   Copyright (c), 2023
-  All rights reserved.
+  All rights reserved.s
 */
 
 // Defines
@@ -32,7 +32,6 @@ void tarefasTaskCreate(void)
 
 void tarefasSystemTasksCreate(void)
 {
-
 }
 
 void tarefasResumeTasks(void)
@@ -44,7 +43,6 @@ void tarefasResumeTasks(void)
 
 static void tarefasTask(void *pvParameters)
 {
-
 }
 
 void tarefas1TaskCreate(void)
@@ -176,4 +174,3 @@ static void tarefas4Task(void *pvParameters)
 	}
 	vTaskDelete(NULL);
 }
-
