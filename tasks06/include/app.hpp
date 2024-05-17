@@ -1,32 +1,21 @@
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include <Arduino.h>
-#include "esp_log.h"
-#include "system_constants.hpp"
-#include "board.hpp"
-#include "system_tasks.hpp"
 #include "ble_handler.hpp"
-#include "button_handler.hpp"
-#include "led_handler.hpp"
+#include "esp_log.h"
 
 class App
 {
 public:
-    static void start();
-    static void haltSystem();
-    static void factoryReset();
-    static void remoteReset();
+    App(BLEHandler *bleHandler);
+    void handleCommand(const std::string &command);
+    void startSendingTask();
+    void stopSendingTask();
 
-    static void startBleInterface();
-
-    static void disableProcessing();
-    static void enableProcessing();
-    static boolean checkProcessing();
-
-    static void initTasks();
+    static void sendingTask(void *pvParameter);
 
 private:
-    static boolean enableProcessing_;
+    BLEHandler *bleHandler;
+    TaskHandle_t sendingTaskHandle;
+    bool isSending;
+    uint32_t sendInterval;
 };

@@ -1,36 +1,130 @@
 #include "ble_handler.hpp"
+#include "ble_server_callbacks.hpp"
+#include "ble_characteristic_callbacks.hpp"
+#include "system_constants.hpp"
 
-void BleHandler::init(void)
+#define SERVICE_UUID "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
+#define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+#define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+
+BLEHandler *BLEHandler::instance = nullptr;
+
+BLEHandler::BLEHandler()
 {
-    // Create the BLE Device
-    BLEDevice::init(kBleHandlerDeviceName); // Give it a name
+    instance = this;
+    pServer = nullptr;
+    pService = nullptr;
+    pTxCharacteristic = nullptr;
+    pRxCharacteristic = nullptr;
+    deviceConnected = false;
+    oldDeviceConnected = false;
+    reconnectDelay = 5000; // Reconnect after 5 seconds
+}
 
-    // Create a BLE Server
+BLEHandler::~BLEHandler()
+{
+    // Cleanup if necessary
+}
+
+void BLEHandler::initBLE(const std::string &deviceName)
+{
+    BLEDevice::init(deviceName);
     pServer = BLEDevice::createServer();
+    pServer->setCallbacks(new MyBLEServerCallbacks(this));
+    pService = pServer->createService(SERVICE_UUID);
 
-    pServer->setCallbacks(new MyServerCallbacks());
-
-    // Create a UART service
-    pService = pServer->createService(kBleHandlerServiceUuid);
-
-    // Cria uma Característica BLE para envio dos dados
-    pCharacteristic = pService->createCharacteristic(
-        kBleHandlerDhtDataCharUuid,
+    pTxCharacteristic = pService->createCharacteristic(
+        CHARACTERISTIC_UUID_TX,
         BLECharacteristic::PROPERTY_NOTIFY);
+    pTxCharacteristic->addDescriptor(new BLE2902());
 
-    pCharacteristic->addDescriptor(new BLE2902());
-
-    // cria uma característica BLE para recebimento dos dados
-    BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-        kBleHandlerCharacteristicUuidRx,
+    pRxCharacteristic = pService->createCharacteristic(
+        CHARACTERISTIC_UUID_RX,
         BLECharacteristic::PROPERTY_WRITE);
+    pRxCharacteristic->setCallbacks(new MyBLECharacteristicCallbacks(this));
 
-    // Set Callbacks
-    pCharacteristic->setCallbacks(new CharacteristicCallbacks());
-
-    // Start Service
     pService->start();
+    startAdvertising();
 
-    // Start Advertisement
-    pServer->getAdvertising()->start();
+    // Create FreeRTOS tasks for handling data and disconnections
+    xTaskCreate(handleReceivedData, "handleReceivedData", 2048, this, 1, nullptr);
+    xTaskCreate(handleSendingData, "handleSendingData", 2048, this, 1, nullptr);
+    xTaskCreate(handleDisconnection, "handleDisconnection", 2048, this, 1, nullptr);
+}
+
+void BLEHandler::startAdvertising()
+{
+    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    pAdvertising->addServiceUUID(SERVICE_UUID);
+    pAdvertising->setScanResponse(true);
+    pAdvertising->setMinPreferred(0x06); // functions that help with iPhone connections issue
+    pAdvertising->setMinPreferred(0x12);
+    BLEDevice::startAdvertising();
+}
+
+void BLEHandler::sendData(const std::string &data)
+{
+    sendQueue.push(data);
+}
+
+std::string BLEHandler::receiveData()
+{
+    if (!receiveQueue.empty())
+    {
+        std::string data = receiveQueue.front();
+        receiveQueue.pop();
+        return data;
+    }
+    return "";
+}
+
+void BLEHandler::handleReceivedData(void *pvParameter)
+{
+    BLEHandler *handler = static_cast<BLEHandler *>(pvParameter);
+    while (true)
+    {
+        if (handler->pRxCharacteristic->getValue().length() > 0)
+        {
+            std::string receivedData = handler->pRxCharacteristic->getValue();
+            handler->receiveQueue.push(receivedData);
+            handler->pRxCharacteristic->setValue(""); // Clear the value after reading
+        }
+        vTaskDelay(pdMS_TO_TICKS(100)); // Check every 100ms
+    }
+}
+
+void BLEHandler::handleSendingData(void *pvParameter)
+{
+    BLEHandler *handler = static_cast<BLEHandler *>(pvParameter);
+    while (true)
+    {
+        if (!handler->sendQueue.empty())
+        {
+            std::string dataToSend = handler->sendQueue.front();
+            handler->sendQueue.pop();
+            handler->pTxCharacteristic->setValue(dataToSend);
+            handler->pTxCharacteristic->notify();
+        }
+        vTaskDelay(pdMS_TO_TICKS(100)); // Send data every 100ms if available
+    }
+}
+
+void BLEHandler::handleDisconnection(void *pvParameter)
+{
+    BLEHandler *handler = static_cast<BLEHandler *>(pvParameter);
+    while (true)
+    {
+        if (!handler->deviceConnected && handler->oldDeviceConnected)
+        {
+            handler->attemptReconnection();
+        }
+        handler->oldDeviceConnected = handler->deviceConnected;
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Check connection status every second
+    }
+}
+
+void BLEHandler::attemptReconnection()
+{
+    BLEDevice::startAdvertising();
+    vTaskDelay(pdMS_TO_TICKS(reconnectDelay)); // Wait for the specified reconnect delay
 }

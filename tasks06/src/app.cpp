@@ -1,103 +1,70 @@
 #include "app.hpp"
+#include <Arduino.h>
 
-boolean App::enableProcessing_ = false;
-
-void App::start()
-{
-
-    disableProcessing();
-
-    initTasks();
-
-    delay(kAppStartDelay);
-
-    ledStatus.setLedType(LedHandler::LedType::TYPE_BLINK_FAST);
-    ledStatus.setActive(true);
-
-    Serial.begin(kAppSerialBaudRate);
-    delay(kAppStartDelay);
-
-    Serial.setDebugOutput(kAppLogMessages);
-
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-    ESP_LOGI(kAppLogTag, "Device");
-    ESP_LOGI(kAppLogTag, "Starting Application....");
-    ESP_LOGI(kAppLogTag, "Checking System...");
-
-    startBleInterface();
-
-    ledStatus.setActive(false);
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-    ESP_LOGI(kAppLogTag, "Finish Boot....");
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-
-    enableProcessing();
+App::App(BLEHandler *bleHandler)
+    : bleHandler(bleHandler), sendingTaskHandle(nullptr), isSending(false), sendInterval(2000)
+{ // Send every 2 seconds
 }
 
-void App::haltSystem()
+void App::handleCommand(const std::string &command)
 {
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-    ledStatus.setLedType(LedHandler::LedType::TYPE_BLINK_FAST);
-    ledStatus.setActive(true);
-    while (true)
+
+    std::string _message = "";
+
+    ESP_LOGE(kAppHandlerLogTag, "Received Command: %s", command);
+
+    for (int i = 0; i < command.length(); i++)
     {
-        ESP_LOGE(kAppLogTag, "System Halt - Do Reset");
-        vTaskDelay((LED_RESET_DELAY_MS) / portTICK_PERIOD_MS);
+        if (command[i] != '\n' && command[i] != '\r')
+        {
+            _message += command[i];
+        }
+    }
+
+    if (_message == "START")
+    {
+        ESP_LOGI(kAppHandlerLogTag, "START Command Received");
+        startSendingTask();
+    }
+    else if (_message == "STOP")
+    {
+        ESP_LOGI(kAppHandlerLogTag, "STOP Command Received");
+        stopSendingTask();
+    }
+    else
+    {
+        // Handle other commands
     }
 }
 
-void App::factoryReset()
+void App::startSendingTask()
 {
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-    ledStatus.setLedType(LedHandler::LedType::TYPE_BLINK_SLOW);
-    ledStatus.setActive(true);
-    ESP_LOGI(kAppLogTag, "Factory Reset");
-    // do something here...
-    vTaskDelay((LED_RESET_DELAY_MS) / portTICK_PERIOD_MS);
-    ESP.restart();
+    if (!isSending)
+    {
+        isSending = true;
+        xTaskCreate(sendingTask, "sendingTask", 2048, this, 1, &sendingTaskHandle); // Reduce stack size to 2048
+    }
 }
 
-void App::remoteReset()
+void App::stopSendingTask()
 {
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-    ledStatus.setLedType(LedHandler::LedType::TYPE_BLINK_SLOW);
-    ledStatus.setActive(true);
-    ESP_LOGI(kAppLogTag, "Remote Reset");
-    // do something here...
-    vTaskDelay((LED_RESET_DELAY_MS) / portTICK_PERIOD_MS);
-    ESP.restart();
+    if (isSending)
+    {
+        isSending = false;
+        if (sendingTaskHandle != nullptr)
+        {
+            vTaskDelete(sendingTaskHandle);
+            sendingTaskHandle = nullptr;
+        }
+    }
 }
 
-void App::startBleInterface()
+void App::sendingTask(void *pvParameter)
 {
-    ESP_LOGI(kAppLogTag, "%s", kAppSeparatorLine);
-    ESP_LOGI(kAppLogTag, "[TEST] Ble Manager");
-    // bleManager::start();
-    ESP_LOGI(kAppLogTag, "[PASS] Ble Manager");
-}
-
-void App::disableProcessing()
-{
-    ESP_LOGI(kAppLogTag, "Disable Processing");
-    ledStatus.setLedType(LedHandler::LedType::TYPE_BLINK_SLOW);
-    ledStatus.setActive(true);
-    enableProcessing_ = false;
-}
-
-void App::enableProcessing()
-{
-    ESP_LOGI(kAppLogTag, "Enable Processing");
-    ledStatus.setLedType(LedHandler::LedType::TYPE_BLINK_FAST);
-    ledStatus.setActive(true);
-    enableProcessing_ = true;
-}
-
-boolean App::checkProcessing()
-{
-    return enableProcessing_;
-}
-
-void App::initTasks()
-{
-    // init other tasks here...
+    App *app = static_cast<App *>(pvParameter);
+    while (app->isSending)
+    {
+        app->bleHandler->sendData("Hello from ESP32!\n");
+        vTaskDelay(pdMS_TO_TICKS(app->sendInterval));
+    }
 }
