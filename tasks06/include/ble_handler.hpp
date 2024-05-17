@@ -11,7 +11,7 @@
 #include <queue>
 #include <string>
 
-    class BLEHandler
+class BLEHandler
 {
 public:
     BLEHandler();

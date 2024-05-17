@@ -8,7 +8,7 @@ void setup()
   delay(kAppStartDelay);
   Serial.begin(kAppSerialBaudRate);
   bleHandler.initBLE(kBLEHandlerDeviceName);
-  Serial.printf("Application Start");
+  ESP_LOGI(kMainLogTag, "Application Start \n");
 }
 
 void loop()

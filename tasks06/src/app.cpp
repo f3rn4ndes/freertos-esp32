@@ -11,7 +11,7 @@ void App::handleCommand(const std::string &command)
 
     std::string _message = "";
 
-    ESP_LOGE(kAppHandlerLogTag, "Received Command: %s", command);
+    ESP_LOGI(kAppLogTag, "Received Command: %s", command.c_str());
 
     for (int i = 0; i < command.length(); i++)
     {
@@ -23,12 +23,12 @@ void App::handleCommand(const std::string &command)
 
     if (_message == "START")
     {
-        ESP_LOGI(kAppHandlerLogTag, "START Command Received");
+        ESP_LOGI(kAppLogTag, "START Command Received");
         startSendingTask();
     }
     else if (_message == "STOP")
     {
-        ESP_LOGI(kAppHandlerLogTag, "STOP Command Received");
+        ESP_LOGI(kAppLogTag, "STOP Command Received");
         stopSendingTask();
     }
     else

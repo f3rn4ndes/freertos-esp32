@@ -89,7 +89,7 @@ void BLEHandler::handleReceivedData(void *pvParameter)
             handler->receiveQueue.push(receivedData);
             handler->pRxCharacteristic->setValue(""); // Clear the value after reading
         }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Check every 100ms
+        vTaskDelay(pdMS_TO_TICKS(kBLEDelaymsShort)); // Check every 100ms
     }
 }
 
@@ -105,7 +105,7 @@ void BLEHandler::handleSendingData(void *pvParameter)
             handler->pTxCharacteristic->setValue(dataToSend);
             handler->pTxCharacteristic->notify();
         }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Send data every 100ms if available
+        vTaskDelay(pdMS_TO_TICKS(kBLEDelaymsShort)); // Send data every 100ms if available
     }
 }
 
@@ -119,7 +119,7 @@ void BLEHandler::handleDisconnection(void *pvParameter)
             handler->attemptReconnection();
         }
         handler->oldDeviceConnected = handler->deviceConnected;
-        vTaskDelay(pdMS_TO_TICKS(1000)); // Check connection status every second
+        vTaskDelay(pdMS_TO_TICKS(kBLEDelaymsLong)); // Check connection status every second
     }
 }
 
