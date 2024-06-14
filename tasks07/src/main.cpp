@@ -1,27 +1,26 @@
-#include <Arduino.h>
-#include "system_constants.hpp"
-#include "esp_log.h"
+#include "main.hpp"
+
+BLEHandler bleHandler;
+App app(&bleHandler);
 
 void setup()
 {
-  delay(kInitialDelay);
-  Serial.begin(kSerialBaudRate);
+  delay(kAppStartDelay);
+  Serial.begin(kAppSerialBaudRate);
   Serial.setDebugOutput(kAppLogMessages);
-  ESP_LOGV(kMainLogTag, "Starting Application....");
-  Serial.println("(P) Starting Application....");
+  bleHandler.initBLE(kBLEHandlerDeviceName);
+  ESP_LOGI(kMainLogTag, "Application Start \n");
 }
 
 void loop()
 {
-  static int counter = 5;
-  // put your main code here, to run repeatedly:
-  ESP_LOGW(kMainLogTag, "Testing ESP32-S3-WROOM-1....");
-  Serial.println("(P) Testing ESP32-S3-WROOM-1....");
-  delay(kPrintDelayMs);
-  if (counter)
+  if (bleHandler.deviceConnected)
   {
-    counter--;
-    if (!counter)
-      Serial.setDebugOutput(false);
+    std::string receivedData = bleHandler.receiveData();
+    if (!receivedData.empty())
+    {
+      app.handleCommand(receivedData);
+    }
   }
+  delay(kAppLoopDelay); // Add a small delay to avoid busy looping
 }
