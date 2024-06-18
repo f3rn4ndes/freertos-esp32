@@ -36,3 +36,12 @@ static const uint32_t kBLEHandlerStackDepthSize = 8192; // in Bytes
 
 static const uint32_t kBLESendIntervalMs = 10; // in milisseconds
 static const uint32_t kCountDown = 30000;
+
+// Insole
+
+// Acc
+
+// Battery
+
+// Memory
+
